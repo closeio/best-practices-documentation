@@ -1,0 +1,53 @@
+{
+  "name": "@closeio/best-practices-documentation",
+  "version": "0.1.0",
+  "description": "Tooling to document best practices in your code base.",
+  "author": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run clean && npm run build:esm && npm run build:cjs",
+    "build:cjs": "tsc -p ./configs/tsconfig.cjs.lib.json",
+    "build:esm": "tsc -p ./configs/tsconfig.esm.json && mv lib/esm/index.js lib/esm/index.mjs",
+    "clean": "rm -rf ./lib",
+    "prepack": "npm run build",
+    "prettier:fix": "prettier --fix src/ tests/",
+    "test:eslint": "eslint src/ tests/",
+    "test:prettier": "prettier --check src/ tests/",
+    "test:typecheck": "tsc",
+    "check": "npm run test:typecheck && npm run test:prettier && npm run test:eslint"
+  },
+  "bin": {
+    "best-practices": "./lib/cjs/best-practices.js"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/esm/types/index.d.ts",
+        "default": "./lib/esm/index.mjs"
+      },
+      "require": {
+        "types": "./lib/cjs/types/index.d.ts",
+        "default": "./lib/cjs/index.js"
+      }
+    }
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "keywords": [],
+  "license": "ISC",
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.0.0",
+    "@types/crypto-js": "^4.1.1",
+    "@types/node": "^20.5.4",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
+    "commander": "^11.0.0",
+    "eslint": "^8.47.0",
+    "prettier": "^3.0.2",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "crypto-js": "^4.1.1"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "extends": "./configs/tsconfig.esm.json",
+  "compilerOptions": {
+    "noEmit": true
+  }
+}
