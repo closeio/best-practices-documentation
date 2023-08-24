@@ -21,14 +21,14 @@ const checkAction = async ({ srcPath, destPath }: CheckArgs) => {
   const previousDigest = await getPreviousBestPracticesDigest(destPath);
 
   if (currentDigest === previousDigest) {
-    return true;
+    return;
   }
 
   console.error(
     `Best practices documentation is not up to date. Please rebuild and commit the changes`,
   );
 
-  return false;
+  process.exit(1);
 };
 
 /**
