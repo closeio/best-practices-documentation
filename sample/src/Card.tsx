@@ -15,7 +15,7 @@ const Card = ({ title, body }: CardProps) => {
       <h2>{title}</h2>
       {/* @BestPractice React Components */}
       {/* @BestPractice.subtitle Conditional Rendering */}
-      {/* @BestPractice.description Make sure your conditional render checks are booleans. */}
+      {/* @BestPractice.description Make sure your conditional render checks are booleans */}
       {Boolean(body) && <p>{body}</p>}
       {/* @BestPractice.end */}
     </div>

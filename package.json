@@ -9,7 +9,7 @@
     "build": "npm run clean && npm run build:esm && npm run build:cjs",
     "build:cjs": "tsc -p ./configs/tsconfig.cjs.lib.json",
     "build:esm": "tsc -p ./configs/tsconfig.esm.json && mv lib/esm/index.js lib/esm/index.mjs",
-    "check": "npm run test:typecheck && npm run test:prettier && npm run test:eslint && npm run test:best-practices && npm run test",
+    "check": "npm run build && npm run test:typecheck && npm run test:prettier && npm run test:eslint && npm run test:best-practices && npm run test",
     "clean": "rm -rf ./lib",
     "prepack": "npm run build",
     "prettier:fix": "prettier --fix src/ tests/",
