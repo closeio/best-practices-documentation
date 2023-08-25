@@ -7,7 +7,7 @@ describe(getAllBestPractices, () => {
     expect(result.map((bp) => bp.toPOJO())).toEqual([
       {
         codeLines: ['      {Boolean(body) && <p>{body}</p>}'],
-        endLine: 19,
+        endLine: 20,
         meta: {
           description: [
             'Make sure your conditional render checks are booleans.',
@@ -16,11 +16,11 @@ describe(getAllBestPractices, () => {
           title: ['React Components'],
         },
         sourceFilename: 'sampleCodeFile.tsx',
-        startLine: 15,
+        startLine: 16,
       },
       {
         codeLines: ['export default Card;'],
-        endLine: 30,
+        endLine: 31,
         meta: {
           description: [
             'Put all exports, default and named, at the end of the file. This way you can always tell what',
@@ -30,7 +30,7 @@ describe(getAllBestPractices, () => {
           title: ['React Components'],
         },
         sourceFilename: 'sampleCodeFile.tsx',
-        startLine: 24,
+        startLine: 25,
       },
       {
         codeLines: [
@@ -39,7 +39,7 @@ describe(getAllBestPractices, () => {
           '  body?: string;',
           '}',
         ],
-        endLine: 9,
+        endLine: 10,
         meta: {
           description: [
             'Use interface over type, unless we need something specific that type supports but interface',
@@ -49,7 +49,7 @@ describe(getAllBestPractices, () => {
           title: ['React Components'],
         },
         sourceFilename: 'sampleCodeFile.tsx',
-        startLine: 0,
+        startLine: 1,
       },
     ]);
   });
