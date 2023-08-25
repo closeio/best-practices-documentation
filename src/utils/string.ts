@@ -13,5 +13,5 @@ export const unindent = (lines: string[]) => {
     }
   }
 
-  return lines.map((line) => line.slice(indent));
+  return indent === 0 ? lines : lines.map((line) => line.slice(indent));
 };

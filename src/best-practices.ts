@@ -20,7 +20,7 @@ const main = () => {
     .requiredOption('-d, --dest-path <destPath>')
     .requiredOption('-u, --code-url <codeUrl>')
     .action((args) => {
-      writeAction(args);
+      writeAction({ ...args, options: {} });
     });
 
   program.parse();

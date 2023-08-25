@@ -5,18 +5,20 @@
   "author": "",
   "main": "index.js",
   "scripts": {
-    "best-practices:build": "node ./lib/cjs/best-practices.js write -s ./sample/src -d ./sample/docs -u https://github.com/closeio/best-practices-documentation/master/sample/src",
+    "best-practices:build": "node ./lib/cjs/best-practices.js write -s ./sample/src -d ./sample/docs -u https://github.com/closeio/best-practices-documentation/tree/main/sample/src",
     "build": "npm run clean && npm run build:esm && npm run build:cjs",
     "build:cjs": "tsc -p ./configs/tsconfig.cjs.lib.json",
     "build:esm": "tsc -p ./configs/tsconfig.esm.json && mv lib/esm/index.js lib/esm/index.mjs",
-    "check": "npm run test:typecheck && npm run test:prettier && npm run test:eslint && npm run test:best-practices",
+    "check": "npm run test:typecheck && npm run test:prettier && npm run test:eslint && npm run test:best-practices && npm run test",
     "clean": "rm -rf ./lib",
     "prepack": "npm run build",
     "prettier:fix": "prettier --fix src/ tests/",
+    "test": "vitest run",
     "test:best-practices": "node ./lib/cjs/best-practices.js check -s ./sample/src -d ./sample/docs",
     "test:eslint": "eslint src/ tests/",
     "test:prettier": "prettier --check src/ tests/",
-    "test:typecheck": "tsc"
+    "test:typecheck": "tsc",
+    "test:watch": "vitest watch"
   },
   "bin": {
     "best-practices": "./lib/cjs/best-practices.js"
@@ -47,7 +49,8 @@
     "commander": "^11.0.0",
     "eslint": "^8.47.0",
     "prettier": "^3.0.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.2"
   },
   "dependencies": {
     "crypto-js": "^4.1.1"

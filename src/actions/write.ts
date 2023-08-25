@@ -7,10 +7,15 @@ import { getAllBestPractices } from '../utils/parse';
 import { unindent } from '../utils/string';
 import { DIGEST_FILENAME } from './consts';
 
+type WriteOptions = {
+  writeExtraMeta?: boolean;
+};
+
 type WriteArgs = {
   srcPath: string;
   destPath: string;
   codeUrl: string;
+  options: WriteOptions;
 };
 
 /**
@@ -20,10 +25,11 @@ export default async function writeAction({
   srcPath,
   destPath,
   codeUrl,
+  options,
 }: WriteArgs) {
   const bestPractices = await getAllBestPractices(srcPath);
 
-  await writeBestPractices(destPath, codeUrl, bestPractices);
+  await writeBestPractices(destPath, bestPractices, codeUrl, options);
   await writeBestPracticesDigest(
     destPath,
     getBestPracticesDigest(bestPractices),
@@ -37,8 +43,9 @@ export default async function writeAction({
  */
 export const writeBestPractices = async (
   contentDir: string,
-  codeUrl: string,
   bestPractices: BestPractice[],
+  codeUrl: string,
+  options: WriteOptions,
 ) => {
   try {
     await rm(contentDir, { recursive: true });
@@ -49,16 +56,20 @@ export const writeBestPractices = async (
   await mkdir(contentDir);
 
   for (const bestPractice of bestPractices) {
-    await writeBestPracticeToFile(contentDir, codeUrl, bestPractice);
+    await writeBestPracticeToFile(contentDir, bestPractice, codeUrl, options);
   }
 };
 
 export const SPECIAL_META_KEYS = new Set(['title', 'subtitle', 'description']);
 
+/**
+ * Write a best practice to a markdown file.
+ */
 const writeBestPracticeToFile = async (
   dir: string,
-  codeUrl: string,
   bestPractice: BestPractice,
+  codeUrl: string,
+  options: WriteOptions,
 ) => {
   const { filepath, filename } = bestPractice.getFileInfo();
   const dirpath = path.join(dir, ...filepath);
@@ -76,7 +87,10 @@ const writeBestPracticeToFile = async (
     }
 
     fd = await open(fullpath, 'a');
-    for (const line of writeBestPractice(codeUrl, bestPractice, writeTitle)) {
+    for (const line of writeBestPractice(bestPractice, codeUrl, {
+      writeTitle,
+      ...options,
+    })) {
       await writeLine(fd, line);
     }
   } finally {
@@ -84,16 +98,18 @@ const writeBestPracticeToFile = async (
   }
 };
 
+type WriteBestPracticeOptions = {
+  writeTitle?: boolean;
+  writeExtraMeta?: boolean;
+};
+
 /**
- * Wite a best practice md file to the given directory
- *
- * @param {string} dir - the directory to write the best practice md file
- * @param {BestPractice} bestPractice - the best practice to write.
+ * Generate best practice lines.
  */
-function* writeBestPractice(
-  codeUrl: string,
+export function* writeBestPractice(
   bestPractice: BestPractice,
-  writeTitle: boolean,
+  codeUrl: string,
+  { writeTitle = true, writeExtraMeta = true }: WriteBestPracticeOptions,
 ): Generator<string> {
   if (writeTitle) {
     yield '---';
@@ -101,15 +117,17 @@ function* writeBestPractice(
     yield '---';
   }
 
-  for (const [key, lines] of Object.entries(bestPractice.meta)) {
-    if (SPECIAL_META_KEYS.has(key)) {
-      continue;
-    }
+  if (writeExtraMeta) {
+    for (const [key, lines] of Object.entries(bestPractice.meta)) {
+      if (SPECIAL_META_KEYS.has(key)) {
+        continue;
+      }
 
-    yield `## ${key}`;
+      yield `## ${key}`;
 
-    for (const line of lines) {
-      yield line;
+      for (const line of lines) {
+        yield line;
+      }
     }
   }
 
@@ -119,9 +137,11 @@ function* writeBestPractice(
   }
 
   // If given, write out the description lines
-  const description = bestPractice.getMeta('description');
+  const description = bestPractice.meta.description;
   if (description) {
-    yield description;
+    for (const line of unindent(description)) {
+      yield line;
+    }
     yield '';
   }
 

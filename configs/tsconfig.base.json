@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
-    "strict": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "checkJs": true,
+    "downlevelIteration": true,
     "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "checkJs": true,
     "declaration": true,
     "declarationMap": true,
-    "allowSyntheticDefaultImports": true,
-    "noImplicitAny": true
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "strict": true
   },
   "files": ["../src/index.ts", "../src/best-practices.ts"]
 }
