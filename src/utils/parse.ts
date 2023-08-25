@@ -34,7 +34,7 @@ export const getFileBestPractices = async (root: string, filename: string) => {
 
   lines.forEach((line, index) => {
     const latest = bestPractices[bestPractices.length - 1];
-    latest.parseLine(index, line);
+    latest.parseLine(index + 1, line);
     if (latest.getState() === 'DONE') {
       bestPractices.push(new BestPractice(filename));
     }
