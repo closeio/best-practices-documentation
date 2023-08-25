@@ -1,6 +1,6 @@
 {
   "name": "@closeio/best-practices-documentation",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Tooling to document best practices in your code base.",
   "author": "Trey Cucco",
   "main": "index.js",
