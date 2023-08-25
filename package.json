@@ -2,7 +2,7 @@
   "name": "@closeio/best-practices-documentation",
   "version": "0.1.0",
   "description": "Tooling to document best practices in your code base.",
-  "author": "",
+  "author": "Trey Cucco",
   "main": "index.js",
   "scripts": {
     "best-practices:build": "node ./lib/cjs/best-practices.js write -s ./sample/src -d ./sample/docs -u https://github.com/closeio/best-practices-documentation/tree/main/sample/src",
@@ -21,7 +21,7 @@
     "test:watch": "vitest watch"
   },
   "bin": {
-    "best-practices": "./lib/cjs/best-practices.js"
+    "best-practices": "lib/cjs/best-practices.js"
   },
   "exports": {
     ".": {
@@ -38,7 +38,13 @@
   "files": [
     "lib/**/*"
   ],
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/closeio/best-practices-documentation.git"
+  },
+  "keywords": [
+    "documentation"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
@@ -54,5 +60,13 @@
   },
   "dependencies": {
     "crypto-js": "^4.1.1"
+  },
+  "bugs": {
+    "url": "https://github.com/closeio/best-practices-documentation/issues"
+  },
+  "homepage": "https://github.com/closeio/best-practices-documentation#readme",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
   }
 }
