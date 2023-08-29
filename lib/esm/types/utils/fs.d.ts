@@ -15,5 +15,8 @@ export declare const writeLine: (fd: FileHandle, line: string, newline?: string)
  * Checks to see if a file exists or not.
  */
 export declare const pathExists: (filename: string) => Promise<boolean>;
+export declare const readFileLines: (filename: string) => Promise<string[]>;
+export declare const writeFileLines: (filename: string, lines: string[]) => Promise<void>;
 export declare const isCodeFile: (filename: string) => boolean;
+export declare const isDocFile: (filename: string) => boolean;
 //# sourceMappingURL=fs.d.ts.map

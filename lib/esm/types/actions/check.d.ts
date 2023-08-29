@@ -1,11 +1,11 @@
 type CheckArgs = {
     srcPath: string;
-    destPath: string;
+    generatedPath: string;
 };
 /**
  * Compare the digest of the best practices against the stored digest to
  * see if the docs need to be updated.
  */
-declare const checkAction: ({ srcPath, destPath }: CheckArgs) => Promise<void>;
+declare const checkAction: ({ srcPath, generatedPath }: CheckArgs) => Promise<void>;
 export default checkAction;
 //# sourceMappingURL=check.d.ts.map
