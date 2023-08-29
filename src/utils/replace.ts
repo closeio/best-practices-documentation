@@ -75,6 +75,7 @@ export const replaceBestPractices = (
     if (inBestPractice) {
       if (INSERT_END_RE.test(line)) {
         inBestPractice = false;
+        // Do not continue, we want to write out the end line
       } else {
         continue;
       }
@@ -89,7 +90,7 @@ export const replaceBestPractices = (
 
       if (!index.has(bestPracticeId)) {
         throw new Error(
-          `Missing best practice: file ${filename} at line ${lineNumber} expects best practice ID: ${bestPracticeId}`,
+          `Missing best practice: file ${filename} at line ${lineNumber} expects best practice ID: ${bestPracticeId}. No best practice with this ID was found.`,
         );
       }
 

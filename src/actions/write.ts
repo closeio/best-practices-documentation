@@ -34,11 +34,15 @@ export default async function writeAction({
   let filteredBestPractices: BestPractice[];
 
   if (docsPath) {
+    // It's OK if the generatedPath is within docsPath, because we'll completely replace
+    // the generated path next. This is a feature not a bug.
     const usedIds = await replaceAllBestPracticesInDocs(
       docsPath,
       allBestPractices,
       (bestPractice) => getBestPracticeCodeLines(bestPractice, codeUrl),
     );
+    // If a best practice was written out to a static file, do not also include it in the
+    // generated output
     filteredBestPractices = allBestPractices.filter(
       (bp) => !usedIds.has(bp.getMeta('id')),
     );
