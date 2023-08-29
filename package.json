@@ -5,8 +5,8 @@
   "author": "Trey Cucco",
   "main": "index.js",
   "scripts": {
-    "build:best-practices": "node ./lib/cjs/best-practices.js write -s ./sample/src -d ./sample/docs -g ./sample/docs/best-practices -u https://github.com/closeio/best-practices-documentation/tree/main/sample/src",
     "build": "npm run clean && npm run build:esm && npm run build:cjs",
+    "build:best-practices": "node ./lib/cjs/best-practices.js write -s ./sample/src -d ./sample/docs -g ./sample/docs/best-practices -u https://github.com/closeio/best-practices-documentation/tree/main/sample/src",
     "build:cjs": "tsc -p ./configs/tsconfig.cjs.lib.json",
     "build:esm": "tsc -p ./configs/tsconfig.esm.json && mv lib/esm/index.js lib/esm/index.mjs",
     "check": "npm run build && npm run test:typecheck && npm run test:prettier && npm run test:eslint && npm run test:best-practices && npm run test",

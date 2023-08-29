@@ -4,10 +4,12 @@ Here we give some long form documentation!
 
 And then we want to insert a code sample:
 
-<!-- @BestPractice conditional_rendering_sample -->
-[Card.tsx lines 16-21](https://github.com/closeio/best-practices-documentation/tree/main/sample/src/Card.tsx#L16-L21)
+<!-- @BestPractice childSpecificity -->
+[Text.tsx lines 1-10](https://github.com/closeio/best-practices-documentation/tree/main/sample/src/Text.tsx#L1-L10)
 ```tsx
-{Boolean(body) && <p>{body}</p>}
+interface TextProps {
+  children: string;
+}
 ```
 <!-- @BestPractice.end -->
 

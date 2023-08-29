@@ -30,23 +30,34 @@ export default async function writeAction({
   codeUrl,
   options,
 }: WriteArgs) {
-  const bestPractices = await getAllBestPractices(srcPath);
+  const allBestPractices = await getAllBestPractices(srcPath);
+  let filteredBestPractices: BestPractice[];
 
   if (docsPath) {
-    await replaceAllBestPracticesInDocs(
+    const usedIds = await replaceAllBestPracticesInDocs(
       docsPath,
-      bestPractices,
+      allBestPractices,
       (bestPractice) => getBestPracticeCodeLines(bestPractice, codeUrl),
     );
+    filteredBestPractices = allBestPractices.filter(
+      (bp) => !usedIds.has(bp.getMeta('id')),
+    );
+  } else {
+    filteredBestPractices = allBestPractices;
   }
 
-  await writeBestPractices(generatedPath, bestPractices, codeUrl, options);
+  await writeBestPractices(
+    generatedPath,
+    filteredBestPractices,
+    codeUrl,
+    options,
+  );
   await writeBestPracticesDigest(
     generatedPath,
-    getBestPracticesDigest(bestPractices),
+    getBestPracticesDigest(allBestPractices),
   );
 
-  return bestPractices;
+  return allBestPractices;
 }
 
 /**
