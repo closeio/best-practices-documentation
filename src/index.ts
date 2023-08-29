@@ -1,6 +1,6 @@
 import BestPractice from './BestPractice';
 import checkAction from './actions/check';
-import writeAction, { writeBestPractice } from './actions/write';
+import writeAction, { getBestPracticeFileLines } from './actions/write';
 import { getBestPracticesDigest } from './utils/digest';
 import { getAllBestPractices, getFileBestPractices } from './utils/parse';
 
@@ -11,5 +11,5 @@ export {
   getBestPracticesDigest,
   getFileBestPractices,
   writeAction,
-  writeBestPractice,
+  getBestPracticeFileLines,
 };

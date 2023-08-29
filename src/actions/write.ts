@@ -4,6 +4,7 @@ import BestPractice from '../BestPractice';
 import { getBestPracticesDigest } from '../utils/digest';
 import { pathExists, writeLine } from '../utils/fs';
 import { getAllBestPractices } from '../utils/parse';
+import { replaceAllBestPracticesInDocs } from '../utils/replace';
 import { unindent } from '../utils/string';
 import { DIGEST_FILENAME } from './consts';
 
@@ -13,6 +14,7 @@ type WriteOptions = {
 
 type WriteArgs = {
   srcPath: string;
+  docsRoot?: string;
   destPath: string;
   codeUrl: string;
   options: WriteOptions;
@@ -23,11 +25,20 @@ type WriteArgs = {
  */
 export default async function writeAction({
   srcPath,
+  docsRoot,
   destPath,
   codeUrl,
   options,
 }: WriteArgs) {
   const bestPractices = await getAllBestPractices(srcPath);
+
+  if (docsRoot) {
+    await replaceAllBestPracticesInDocs(
+      docsRoot,
+      bestPractices,
+      (bestPractice) => getBestPracticeCodeLines(bestPractice, codeUrl),
+    );
+  }
 
   await writeBestPractices(destPath, bestPractices, codeUrl, options);
   await writeBestPracticesDigest(
@@ -87,7 +98,7 @@ const writeBestPracticeToFile = async (
     }
 
     fd = await open(fullpath, 'a');
-    for (const line of writeBestPractice(bestPractice, codeUrl, {
+    for (const line of getBestPracticeFileLines(bestPractice, codeUrl, {
       writeTitle,
       ...options,
     })) {
@@ -106,10 +117,10 @@ type WriteBestPracticeOptions = {
 /**
  * Generate best practice lines.
  */
-export function* writeBestPractice(
+export function* getBestPracticeFileLines(
   bestPractice: BestPractice,
   codeUrl: string,
-  { writeTitle = true, writeExtraMeta = true }: WriteBestPracticeOptions,
+  { writeTitle = true, writeExtraMeta = false }: WriteBestPracticeOptions,
 ): Generator<string> {
   if (writeTitle) {
     yield '---';
@@ -145,17 +156,24 @@ export function* writeBestPractice(
     yield '';
   }
 
-  const { sourceFilename, startLine, endLine } = bestPractice;
-  const url = `${codeUrl}/${sourceFilename}#L${startLine}-L${endLine}`;
-  yield `[${sourceFilename} lines ${startLine}-${endLine}](${url})`;
-  yield `\`\`\`${bestPractice.getFileType()}`;
-
-  for (const line of unindent(bestPractice.codeLines)) {
+  for (const line of getBestPracticeCodeLines(bestPractice, codeUrl)) {
     yield line;
   }
-
-  yield '```';
 }
+
+const getBestPracticeCodeLines = (
+  bestPractice: BestPractice,
+  codeUrl: string,
+): string[] => {
+  const { sourceFilename, startLine, endLine } = bestPractice;
+  const url = `${codeUrl}/${sourceFilename}#L${startLine}-L${endLine}`;
+  return [
+    `[${sourceFilename} lines ${startLine}-${endLine}](${url})`,
+    `\`\`\`${bestPractice.getFileType()}`,
+    ...unindent(bestPractice.codeLines),
+    '```',
+  ];
+};
 
 /**
  * Write the digest for best practices.

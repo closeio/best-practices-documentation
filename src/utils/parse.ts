@@ -1,7 +1,6 @@
-import { readFile } from 'fs/promises';
 import path from 'path';
 import BestPractice from '../BestPractice';
-import { isCodeFile, walk } from './fs';
+import { isCodeFile, readFileLines, walk } from './fs';
 
 /**
  * Recursively walk the srcDir and pull best practices from all code files.
@@ -27,8 +26,7 @@ export const getAllBestPractices = async (srcDir: string) => {
  * Scan through the file at root/filename searching for best practices.
  */
 export const getFileBestPractices = async (root: string, filename: string) => {
-  const text = await readFile(path.join(root, filename), { encoding: 'utf8' });
-  const lines = text.split('\n');
+  const lines = await readFileLines(path.join(root, filename));
 
   const bestPractices = [new BestPractice(filename)];
 

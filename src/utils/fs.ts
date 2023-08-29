@@ -1,4 +1,5 @@
 import { constants } from 'fs';
+import { readFile, writeFile } from 'fs/promises';
 import { type FileHandle, access, readdir } from 'fs/promises';
 import { join } from 'path';
 
@@ -40,5 +41,16 @@ export const pathExists = async (filename: string) => {
   return true;
 };
 
+export const readFileLines = async (filename: string) => {
+  const text = await readFile(filename, { encoding: 'utf8' });
+  return text.split('\n');
+};
+
+export const writeFileLines = async (filename: string, lines: string[]) => {
+  return writeFile(filename, lines);
+};
+
 export const isCodeFile = (filename: string) =>
   /\.(js|jsx|ts|tsx)$/i.test(filename);
+
+export const isDocFile = (filename: string) => /\.md$/i.test(filename);
