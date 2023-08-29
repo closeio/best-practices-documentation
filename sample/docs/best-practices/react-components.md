@@ -4,7 +4,7 @@ title: React Components
 ### Conditional Rendering
 Make sure your conditional render checks are booleans.
 
-[Card.tsx lines 16-20](https://github.com/closeio/best-practices-documentation/tree/main/sample/src/Card.tsx#L16-L20)
+[Card.tsx lines 16-21](https://github.com/closeio/best-practices-documentation/tree/main/sample/src/Card.tsx#L16-L21)
 ```tsx
 {Boolean(body) && <p>{body}</p>}
 ```
@@ -12,7 +12,7 @@ Make sure your conditional render checks are booleans.
 Put all exports, default and named, at the end of the file. This way you can always tell what
 is exported by the file by jumping to the bottom.
 
-[Card.tsx lines 25-31](https://github.com/closeio/best-practices-documentation/tree/main/sample/src/Card.tsx#L25-L31)
+[Card.tsx lines 26-32](https://github.com/closeio/best-practices-documentation/tree/main/sample/src/Card.tsx#L26-L32)
 ```tsx
 export default Card;
 ```

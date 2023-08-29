@@ -1,3 +1,4 @@
+import path from 'path';
 import BestPractice from '../BestPractice';
 import { isDocFile, readFileLines, walk, writeFileLines } from './fs';
 
@@ -23,7 +24,7 @@ export const replaceAllBestPracticesInDocs = async (
   for await (const filename of walk(docsRoot)) {
     if (isDocFile(filename)) {
       const inserted = await insertBestPracticesIntoDoc(
-        filename,
+        path.join(docsRoot, filename),
         index,
         getBestPracticeLines,
       );

@@ -14,8 +14,8 @@ type WriteOptions = {
 
 type WriteArgs = {
   srcPath: string;
-  docsRoot?: string;
-  destPath: string;
+  docsPath?: string;
+  generatedPath: string;
   codeUrl: string;
   options: WriteOptions;
 };
@@ -25,24 +25,24 @@ type WriteArgs = {
  */
 export default async function writeAction({
   srcPath,
-  docsRoot,
-  destPath,
+  docsPath,
+  generatedPath,
   codeUrl,
   options,
 }: WriteArgs) {
   const bestPractices = await getAllBestPractices(srcPath);
 
-  if (docsRoot) {
+  if (docsPath) {
     await replaceAllBestPracticesInDocs(
-      docsRoot,
+      docsPath,
       bestPractices,
       (bestPractice) => getBestPracticeCodeLines(bestPractice, codeUrl),
     );
   }
 
-  await writeBestPractices(destPath, bestPractices, codeUrl, options);
+  await writeBestPractices(generatedPath, bestPractices, codeUrl, options);
   await writeBestPracticesDigest(
-    destPath,
+    generatedPath,
     getBestPracticesDigest(bestPractices),
   );
 
@@ -178,8 +178,11 @@ const getBestPracticeCodeLines = (
 /**
  * Write the digest for best practices.
  */
-const writeBestPracticesDigest = async (destPath: string, digest: string) => {
-  const digestPath = path.join(destPath, DIGEST_FILENAME);
+const writeBestPracticesDigest = async (
+  generatedPath: string,
+  digest: string,
+) => {
+  const digestPath = path.join(generatedPath, DIGEST_FILENAME);
   let fd;
 
   try {

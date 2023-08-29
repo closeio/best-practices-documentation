@@ -47,7 +47,10 @@ export const readFileLines = async (filename: string) => {
 };
 
 export const writeFileLines = async (filename: string, lines: string[]) => {
-  return writeFile(filename, lines);
+  return writeFile(
+    filename,
+    lines.map((line) => `${line}\n`),
+  );
 };
 
 export const isCodeFile = (filename: string) =>

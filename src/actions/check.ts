@@ -7,18 +7,18 @@ import { DIGEST_FILENAME } from './consts';
 
 type CheckArgs = {
   srcPath: string;
-  destPath: string;
+  generatedPath: string;
 };
 
 /**
  * Compare the digest of the best practices against the stored digest to
  * see if the docs need to be updated.
  */
-const checkAction = async ({ srcPath, destPath }: CheckArgs) => {
+const checkAction = async ({ srcPath, generatedPath }: CheckArgs) => {
   const bestPractices = await getAllBestPractices(srcPath);
 
   const currentDigest = getBestPracticesDigest(bestPractices);
-  const previousDigest = await getPreviousBestPracticesDigest(destPath);
+  const previousDigest = await getPreviousBestPracticesDigest(generatedPath);
 
   if (currentDigest === previousDigest) {
     return;
@@ -34,8 +34,8 @@ const checkAction = async ({ srcPath, destPath }: CheckArgs) => {
 /**
  * Get the stored digest for best practices.
  */
-const getPreviousBestPracticesDigest = async (destPath: string) => {
-  const digestPath = path.join(destPath, DIGEST_FILENAME);
+const getPreviousBestPracticesDigest = async (generatedPath: string) => {
+  const digestPath = path.join(generatedPath, DIGEST_FILENAME);
 
   if (!(await pathExists(digestPath))) {
     return '';
