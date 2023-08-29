@@ -83,7 +83,7 @@ were generated. The `check` command will exit with a status code of `1` if the
 docs are out of date, making this a good command to use in a pre-commit hook or
 a CI step.
 
-## Inserting Docs Into Static Documentation
+## Inserting Blocks Into Static Documentation
 
 If you'd like to insert (and keep up-to-date) some best practices into static
 documentation, meaning docs that you type out yourself, and aren't completely
@@ -108,7 +108,7 @@ like to insert a best practice:
     <!-- @BestPractice insertIntoStaticDocs -->
     <!-- @BestPractice.end -->
 
-It's important to have both the start and end lines, as these will be used by
+It's important to have both the start and end lines, as these will be used as
 boundaries of the program to know where to replace the code.
 
 ### From the Command Line
