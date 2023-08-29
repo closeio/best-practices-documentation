@@ -5,7 +5,7 @@
   "author": "Trey Cucco",
   "main": "index.js",
   "scripts": {
-    "best-practices:build": "node ./lib/cjs/best-practices.js write -s ./sample/src -d ./sample/docs -u https://github.com/closeio/best-practices-documentation/tree/main/sample/src",
+    "best-practices:build": "node ./lib/cjs/best-practices.js write -s ./sample/src -d ./sample/docs/best-practices -u https://github.com/closeio/best-practices-documentation/tree/main/sample/src",
     "build": "npm run clean && npm run build:esm && npm run build:cjs",
     "build:cjs": "tsc -p ./configs/tsconfig.cjs.lib.json",
     "build:esm": "tsc -p ./configs/tsconfig.esm.json && mv lib/esm/index.js lib/esm/index.mjs",
@@ -14,7 +14,7 @@
     "prepack": "npm run build",
     "prettier:fix": "prettier --fix src/ tests/",
     "test": "vitest run",
-    "test:best-practices": "node ./lib/cjs/best-practices.js check -s ./sample/src -d ./sample/docs",
+    "test:best-practices": "node ./lib/cjs/best-practices.js check -s ./sample/src -d ./sample/docs/best-practices",
     "test:eslint": "eslint src/ tests/",
     "test:prettier": "prettier --check src/ tests/",
     "test:typecheck": "tsc",
