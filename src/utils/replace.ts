@@ -102,5 +102,5 @@ export const replaceBestPractices = (
   return [newLines, new Set(insertedIds)];
 };
 
-const INSERT_START_RE = /^\s*<!-- @BestPractice (\S+) -->$/;
+const INSERT_START_RE = /^\s*<!-- @BestPractice.insert (\S+) -->$/;
 const INSERT_END_RE = /^\s*<!-- @BestPractice.end -->$/;

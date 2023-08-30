@@ -105,7 +105,7 @@ then the last one picked up by the tool when parsing your code will be used.o
 In your static markdown documentation file, add a comment like this where you'd
 like to insert a best practice:
 
-    <!-- @BestPractice insertIntoStaticDocs -->
+    <!-- @BestPractice.insert insertIntoStaticDocs -->
     <!-- @BestPractice.end -->
 
 It's important to have both the start and end lines, as these will be used as

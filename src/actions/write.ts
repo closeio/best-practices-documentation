@@ -61,7 +61,7 @@ export default async function writeAction({
     getBestPracticesDigest(allBestPractices),
   );
 
-  return allBestPractices;
+  return filteredBestPractices;
 }
 
 /**
@@ -183,10 +183,10 @@ const getBestPracticeCodeLines = (
   const { sourceFilename, startLine, endLine } = bestPractice;
   const url = `${codeUrl}/${sourceFilename}#L${startLine}-L${endLine}`;
   return [
-    `[${sourceFilename} lines ${startLine}-${endLine}](${url})`,
     `\`\`\`${bestPractice.getFileType()}`,
     ...unindent(bestPractice.codeLines),
     '```',
+    `From [${sourceFilename} lines ${startLine}-${endLine}](${url})`,
   ];
 };
 
