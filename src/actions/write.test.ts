@@ -17,13 +17,13 @@ describe(getBestPracticeFileLines, () => {
       'This is line one of the description.',
       'And this is line 2!',
       '',
-      `[someFile.ts lines 10-18](${codeUrl}/someFile.ts#L10-L18)`,
       '```ts',
       'const add = (a: number) => (b: number) => {',
       '  return a + b;',
       '};',
       'return add(5);',
       '```',
+      `From [someFile.ts lines 10-18](${codeUrl}/someFile.ts#L10-L18)`,
     ]);
   });
 });
