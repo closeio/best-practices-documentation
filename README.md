@@ -27,17 +27,17 @@ You can install this package via npm:
 
 ## Tagging your Code as a Best Practice
 
-You can tag blocks of code as a best practices with specially formatted
+You can tag blocks of code as best practices with specially formatted
 comments:
 
 ```tsx
 // @BestPractice React Components
 // @BestPractice.subtitle State Updates
-// @BestPracitce.description
+// @BestPractice.description
 //   If you need to update state based on the current value, use
 //   the functional version of the state setter rather than using
 //   the `value`. This keeps `useCallback` from creating a new function
-//  every time the value changes.
+//   every time the value changes.
 const [value, setValue] = useState(0);
 const incrementValue = useCallback(
   () => setValue((currentValue) => currentValue + 1),
@@ -62,7 +62,7 @@ To extract your best practices documentation, you can invoke our CLI tool:
 
     npx best-practices write -s src/ -d docs/best-practices -u "https://github.com/<your org>/<your repo>/tree/main"
 
-This will scan through your code in `src` and build best practices markdown
+This will scan through your code in `src` and build best practices Markdown
 files from your tagged code. The contents of the `-d` directory will be
 completely overwritten, so make sure you point to a directory that doesn't
 contain any manually written documentation.
@@ -87,12 +87,12 @@ a CI step.
 
 There are several strategies for keeping your docs up-to-date:
 
-1. Create a pre-commit hook that will run `best-pracitces write`
-2. Create a pre-commit hook that will run `best-pracitces check`
-3. Create a CI step that will run `best-pracitces check`
+1. Create a pre-commit hook that will run `best-practices write`
+2. Create a pre-commit hook that will run `best-practices check`
+3. Create a CI step that will run `best-practices check`
 4. If you have a documentation system that automatically creates a static
    documentation site from your docs, you may be able to hook in the
-   `best-pracitces` command as part of that.
+   `best-practices` command as part of that.
 
 ## Customizing Docs Generation
 
