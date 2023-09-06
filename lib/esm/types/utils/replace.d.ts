@@ -4,7 +4,7 @@ import BestPractice from '../BestPractice';
  */
 export declare const replaceAllBestPracticesInDocs: (docsRoot: string, bestPractices: BestPractice[], getBestPracticeLines: (bestPracitce: BestPractice) => string[]) => Promise<Set<string>>;
 /**
- * Scan through a static documentation file and replace best practices ines
+ * Scan through a static documentation file and replace best practices lines
  */
 export declare const insertBestPracticesIntoDoc: (filename: string, index: Map<string, BestPractice>, getBestPracticeLines: (bestPracitce: BestPractice) => string[]) => Promise<Set<string>>;
 /**

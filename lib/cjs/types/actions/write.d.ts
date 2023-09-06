@@ -14,7 +14,7 @@ type WriteArgs = {
  */
 export default function writeAction({ srcPath, docsPath, generatedPath, codeUrl, options, }: WriteArgs): Promise<BestPractice[]>;
 /**
- * Writes best practices out to md doc files.
+ * Writes best practices out to Markdown doc files.
  */
 export declare const writeBestPractices: (contentDir: string, bestPractices: BestPractice[], codeUrl: string, options: WriteOptions) => Promise<void>;
 export declare const SPECIAL_META_KEYS: Set<string>;
