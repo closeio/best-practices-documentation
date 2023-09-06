@@ -56,4 +56,4 @@ export const writeFileLines = async (filename: string, lines: string[]) => {
 export const isCodeFile = (filename: string) =>
   /\.(js|jsx|ts|tsx)$/i.test(filename);
 
-export const isDocFile = (filename: string) => /\.md$/i.test(filename);
+export const isDocFile = (filename: string) => /\.mdx?$/i.test(filename);
