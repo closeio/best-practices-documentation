@@ -36,7 +36,7 @@ export const replaceAllBestPracticesInDocs = async (
 };
 
 /**
- * Scan through a static documentation file and replace best practices ines
+ * Scan through a static documentation file and replace best practices lines
  */
 export const insertBestPracticesIntoDoc = async (
   filename: string,
