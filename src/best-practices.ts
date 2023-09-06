@@ -4,12 +4,10 @@ import checkAction from './actions/check';
 import writeAction from './actions/write';
 
 const main = () => {
-  program;
-
   program
     .command('check')
     .requiredOption('-s, --src-path <srcPath>')
-    .requiredOption('-d, --dest-path <destPath>')
+    .requiredOption('-g, --generated-path <generatedPath>')
     .action((args) => {
       checkAction(args);
     });
@@ -17,7 +15,8 @@ const main = () => {
   program
     .command('write')
     .requiredOption('-s, --src-path <srcPath>')
-    .requiredOption('-d, --dest-path <destPath>')
+    .option('-d, --docs-path <docsPath>')
+    .requiredOption('-g, --generated-path <generatedPath>')
     .requiredOption('-u, --code-url <codeUrl>')
     .action((args) => {
       writeAction({ ...args, options: {} });

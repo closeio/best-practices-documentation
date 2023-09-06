@@ -4,6 +4,7 @@ import BestPractice from '../BestPractice';
 import { getBestPracticesDigest } from '../utils/digest';
 import { pathExists, writeLine } from '../utils/fs';
 import { getAllBestPractices } from '../utils/parse';
+import { replaceAllBestPracticesInDocs } from '../utils/replace';
 import { unindent } from '../utils/string';
 import { DIGEST_FILENAME } from './consts';
 
@@ -13,7 +14,8 @@ type WriteOptions = {
 
 type WriteArgs = {
   srcPath: string;
-  destPath: string;
+  docsPath?: string;
+  generatedPath: string;
   codeUrl: string;
   options: WriteOptions;
 };
@@ -23,23 +25,47 @@ type WriteArgs = {
  */
 export default async function writeAction({
   srcPath,
-  destPath,
+  docsPath,
+  generatedPath,
   codeUrl,
   options,
 }: WriteArgs) {
-  const bestPractices = await getAllBestPractices(srcPath);
+  const allBestPractices = await getAllBestPractices(srcPath);
+  let filteredBestPractices: BestPractice[];
 
-  await writeBestPractices(destPath, bestPractices, codeUrl, options);
+  if (docsPath) {
+    // It's OK if the generatedPath is within docsPath, because we'll completely replace
+    // the generated path next. This is a feature not a bug.
+    const usedIds = await replaceAllBestPracticesInDocs(
+      docsPath,
+      allBestPractices,
+      (bestPractice) => getBestPracticeCodeLines(bestPractice, codeUrl),
+    );
+    // If a best practice was written out to a static file, do not also include it in the
+    // generated output
+    filteredBestPractices = allBestPractices.filter(
+      (bp) => !usedIds.has(bp.getMeta('id')),
+    );
+  } else {
+    filteredBestPractices = allBestPractices;
+  }
+
+  await writeBestPractices(
+    generatedPath,
+    filteredBestPractices,
+    codeUrl,
+    options,
+  );
   await writeBestPracticesDigest(
-    destPath,
-    getBestPracticesDigest(bestPractices),
+    generatedPath,
+    getBestPracticesDigest(allBestPractices),
   );
 
-  return bestPractices;
+  return filteredBestPractices;
 }
 
 /**
- * Writes best practices out to md doc files.
+ * Writes best practices out to Markdown doc files.
  */
 export const writeBestPractices = async (
   contentDir: string,
@@ -87,7 +113,7 @@ const writeBestPracticeToFile = async (
     }
 
     fd = await open(fullpath, 'a');
-    for (const line of writeBestPractice(bestPractice, codeUrl, {
+    for (const line of getBestPracticeFileLines(bestPractice, codeUrl, {
       writeTitle,
       ...options,
     })) {
@@ -106,10 +132,10 @@ type WriteBestPracticeOptions = {
 /**
  * Generate best practice lines.
  */
-export function* writeBestPractice(
+export function* getBestPracticeFileLines(
   bestPractice: BestPractice,
   codeUrl: string,
-  { writeTitle = true, writeExtraMeta = true }: WriteBestPracticeOptions,
+  { writeTitle = true, writeExtraMeta = false }: WriteBestPracticeOptions,
 ): Generator<string> {
   if (writeTitle) {
     yield '---';
@@ -145,23 +171,33 @@ export function* writeBestPractice(
     yield '';
   }
 
-  const { sourceFilename, startLine, endLine } = bestPractice;
-  const url = `${codeUrl}/${sourceFilename}#L${startLine}-L${endLine}`;
-  yield `[${sourceFilename} lines ${startLine}-${endLine}](${url})`;
-  yield `\`\`\`${bestPractice.getFileType()}`;
-
-  for (const line of unindent(bestPractice.codeLines)) {
+  for (const line of getBestPracticeCodeLines(bestPractice, codeUrl)) {
     yield line;
   }
-
-  yield '```';
 }
+
+const getBestPracticeCodeLines = (
+  bestPractice: BestPractice,
+  codeUrl: string,
+): string[] => {
+  const { sourceFilename, startLine, endLine } = bestPractice;
+  const url = `${codeUrl}/${sourceFilename}#L${startLine}-L${endLine}`;
+  return [
+    `\`\`\`${bestPractice.getFileType()}`,
+    ...unindent(bestPractice.codeLines),
+    '```',
+    `From [${sourceFilename} lines ${startLine}-${endLine}](${url})`,
+  ];
+};
 
 /**
  * Write the digest for best practices.
  */
-const writeBestPracticesDigest = async (destPath: string, digest: string) => {
-  const digestPath = path.join(destPath, DIGEST_FILENAME);
+const writeBestPracticesDigest = async (
+  generatedPath: string,
+  digest: string,
+) => {
+  const digestPath = path.join(generatedPath, DIGEST_FILENAME);
   let fd;
 
   try {
