@@ -53,7 +53,7 @@ Check out the sample project that is part of the code to see more examples.
 
 ### Limitations
 
-- We currently do not support multiline comments.
+- We currently do not support multi-line comments.
 - This tool only looks at files with `.js`, `.jsx`, `.ts`, and `.tsx` extensions
 
 ## Extracting Best Practices Documentation
@@ -98,7 +98,7 @@ In your code, add a `id` meta field to the documentation block:
 
 This id should be unique throughout your codebase, but this is not checked or
 enforced by the tool. If you have multiple best practice blocks with the same ID
-then the last one picked up by the tool when parsing your code will be used.o
+then the last one picked up by the tool when parsing your code will be used.
 
 ### In Static Documentation
 

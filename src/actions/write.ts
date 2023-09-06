@@ -65,7 +65,7 @@ export default async function writeAction({
 }
 
 /**
- * Writes best practices out to md doc files.
+ * Writes best practices out to Markdown doc files.
  */
 export const writeBestPractices = async (
   contentDir: string,
