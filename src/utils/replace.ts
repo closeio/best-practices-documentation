@@ -63,6 +63,7 @@ export const replaceBestPractices = (
   index: Map<string, BestPractice>,
   getBestPracticeLines: (bestPractices: BestPractice) => string[],
 ): [newLines: string[], insertedIds: Set<string>] => {
+  const [startRe, endRe] = getInsertREs(filename);
   let inBestPractice = false;
   let lineNumber = 0;
 
@@ -73,7 +74,7 @@ export const replaceBestPractices = (
     lineNumber += 1;
 
     if (inBestPractice) {
-      if (INSERT_END_RE.test(line)) {
+      if (endRe.test(line)) {
         inBestPractice = false;
         // Do not continue, we want to write out the end line
       } else {
@@ -83,10 +84,10 @@ export const replaceBestPractices = (
 
     newLines.push(line);
 
-    if (INSERT_START_RE.test(line)) {
+    if (startRe.test(line)) {
       inBestPractice = true;
 
-      const [, bestPracticeId] = INSERT_START_RE.exec(line)!;
+      const [, bestPracticeId] = startRe.exec(line)!;
 
       if (!index.has(bestPracticeId)) {
         throw new Error(
@@ -102,5 +103,19 @@ export const replaceBestPractices = (
   return [newLines, new Set(insertedIds)];
 };
 
-const INSERT_START_RE = /^\s*<!-- @BestPractice.insert (\S+) -->$/;
-const INSERT_END_RE = /^\s*<!-- @BestPractice.end -->$/;
+/**
+ * Get the regexp to match insertion comments in a documentation file.
+ *
+ * .mdx files use jsx comments rather than html comments.
+ */
+const getInsertREs = (filename: string): [start: RegExp, end: RegExp] => {
+  if (/\.mdx$/.test(filename)) {
+    return [MDX_INSERT_START_RE, MDX_INSERT_END_RE];
+  }
+  return [MD_INSERT_START_RE, MD_INSERT_END_RE];
+};
+
+const MD_INSERT_START_RE = /^\s*<!-- @BestPractice.insert (\S+) -->$/;
+const MD_INSERT_END_RE = /^\s*<!-- @BestPractice.end -->$/;
+const MDX_INSERT_START_RE = /^\s*{\/\* @BestPractice.insert (\S+) \*\/}$/;
+const MDX_INSERT_END_RE = /^\s*{\/\* @BestPractice.end \*\/}$/;
