@@ -27,8 +27,7 @@ You can install this package via npm:
 
 ## Tagging your Code as a Best Practice
 
-You can tag blocks of code as best practices with specially formatted
-comments:
+You can tag blocks of code as best practices with specially formatted comments:
 
 ```tsx
 // @BestPractice React Components
@@ -107,6 +106,11 @@ like to insert a best practice:
 
     <!-- @BestPractice.insert insertIntoStaticDocs -->
     <!-- @BestPractice.end -->
+
+If your file is a `.mdx` Markdown file, use `JSX` style comments instead:
+
+    {/* @BestPractice.insert insertIntoStaticDocs */}
+    {/* @BestPractice.end */}
 
 It's important to have both the start and end lines, as these will be used as
 boundaries of the program to know where to replace the code.
