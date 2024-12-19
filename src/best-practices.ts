@@ -18,6 +18,10 @@ const main = () => {
     .option('-d, --docs-path <docsPath>')
     .requiredOption('-g, --generated-path <generatedPath>')
     .requiredOption('-u, --code-url <codeUrl>')
+    .option(
+      '-m, --extension-mappings <mappings...>',
+      'e.g. jsx:js to map jsx to js',
+    )
     .action((args) => {
       writeAction({ ...args, options: {} });
     });

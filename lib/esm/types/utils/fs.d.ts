@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { type FileHandle } from 'fs/promises';
 /**
  * Asynchronously walks through a directory structure and yields filenames.

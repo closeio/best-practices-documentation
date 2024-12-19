@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { mockBestPractice } from '../../tests/mocks/bestPractice';
+import { buildCodeTypeMap } from '../utils/codeType';
 import { getBestPracticeFileLines } from './write';
 
 describe(getBestPracticeFileLines, () => {
@@ -8,7 +9,14 @@ describe(getBestPracticeFileLines, () => {
 
     const codeUrl =
       'https://github.com/closeio/best-practices-documentation/tree/main/src';
-    const lines = [...getBestPracticeFileLines(bestPractice, codeUrl, {})];
+    const lines = [
+      ...getBestPracticeFileLines(
+        bestPractice,
+        codeUrl,
+        buildCodeTypeMap(['ts:typescript']),
+        {},
+      ),
+    ];
     expect(lines).toEqual([
       '---',
       'title: A Best Practice',
@@ -17,7 +25,7 @@ describe(getBestPracticeFileLines, () => {
       'This is line one of the description.',
       'And this is line 2!',
       '',
-      '```ts',
+      '```typescript',
       'const add = (a: number) => (b: number) => {',
       '  return a + b;',
       '};',

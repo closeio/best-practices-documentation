@@ -1,6 +1,7 @@
 import { mkdir, open, rm } from 'fs/promises';
 import path from 'path';
 import BestPractice from '../BestPractice';
+import { type CodeTypeMapper, buildCodeTypeMap } from '../utils/codeType';
 import { getBestPracticesDigest } from '../utils/digest';
 import { pathExists, writeLine } from '../utils/fs';
 import { getAllBestPractices } from '../utils/parse';
@@ -17,6 +18,7 @@ type WriteArgs = {
   docsPath?: string;
   generatedPath: string;
   codeUrl: string;
+  extensionMappings?: string[];
   options: WriteOptions;
 };
 
@@ -28,8 +30,11 @@ export default async function writeAction({
   docsPath,
   generatedPath,
   codeUrl,
+  extensionMappings,
   options,
 }: WriteArgs) {
+  const codeTypeMap = buildCodeTypeMap(extensionMappings ?? []);
+
   const allBestPractices = await getAllBestPractices(srcPath);
   let filteredBestPractices: BestPractice[];
 
@@ -39,7 +44,8 @@ export default async function writeAction({
     const usedIds = await replaceAllBestPracticesInDocs(
       docsPath,
       allBestPractices,
-      (bestPractice) => getBestPracticeCodeLines(bestPractice, codeUrl),
+      (bestPractice) =>
+        getBestPracticeCodeLines(bestPractice, codeUrl, codeTypeMap),
     );
     // If a best practice was written out to a static file, do not also include it in the
     // generated output
@@ -54,6 +60,7 @@ export default async function writeAction({
     generatedPath,
     filteredBestPractices,
     codeUrl,
+    codeTypeMap,
     options,
   );
   await writeBestPracticesDigest(
@@ -71,6 +78,7 @@ export const writeBestPractices = async (
   contentDir: string,
   bestPractices: BestPractice[],
   codeUrl: string,
+  codeTypeMap: CodeTypeMapper,
   options: WriteOptions,
 ) => {
   try {
@@ -82,7 +90,13 @@ export const writeBestPractices = async (
   await mkdir(contentDir);
 
   for (const bestPractice of bestPractices) {
-    await writeBestPracticeToFile(contentDir, bestPractice, codeUrl, options);
+    await writeBestPracticeToFile(
+      contentDir,
+      bestPractice,
+      codeUrl,
+      codeTypeMap,
+      options,
+    );
   }
 };
 
@@ -95,6 +109,7 @@ const writeBestPracticeToFile = async (
   dir: string,
   bestPractice: BestPractice,
   codeUrl: string,
+  codeTypeMap: CodeTypeMapper,
   options: WriteOptions,
 ) => {
   const { filepath, filename } = bestPractice.getFileInfo();
@@ -113,10 +128,15 @@ const writeBestPracticeToFile = async (
     }
 
     fd = await open(fullpath, 'a');
-    for (const line of getBestPracticeFileLines(bestPractice, codeUrl, {
-      writeTitle,
-      ...options,
-    })) {
+    for (const line of getBestPracticeFileLines(
+      bestPractice,
+      codeUrl,
+      codeTypeMap,
+      {
+        writeTitle,
+        ...options,
+      },
+    )) {
       await writeLine(fd, line);
     }
   } finally {
@@ -135,6 +155,7 @@ type WriteBestPracticeOptions = {
 export function* getBestPracticeFileLines(
   bestPractice: BestPractice,
   codeUrl: string,
+  codeTypeMap: CodeTypeMapper,
   { writeTitle = true, writeExtraMeta = false }: WriteBestPracticeOptions,
 ): Generator<string> {
   if (writeTitle) {
@@ -171,7 +192,11 @@ export function* getBestPracticeFileLines(
     yield '';
   }
 
-  for (const line of getBestPracticeCodeLines(bestPractice, codeUrl)) {
+  for (const line of getBestPracticeCodeLines(
+    bestPractice,
+    codeUrl,
+    codeTypeMap,
+  )) {
     yield line;
   }
 }
@@ -179,11 +204,13 @@ export function* getBestPracticeFileLines(
 const getBestPracticeCodeLines = (
   bestPractice: BestPractice,
   codeUrl: string,
+  codeTypeMap: CodeTypeMapper,
 ): string[] => {
   const { sourceFilename, startLine, endLine } = bestPractice;
   const url = `${codeUrl}/${sourceFilename}#L${startLine}-L${endLine}`;
+  const codeType = codeTypeMap(bestPractice.getFileType());
   return [
-    `\`\`\`${bestPractice.getFileType()}`,
+    `\`\`\`${codeType}`,
     ...unindent(bestPractice.codeLines),
     '```',
     `From [${sourceFilename} lines ${startLine}-${endLine}](${url})`,
