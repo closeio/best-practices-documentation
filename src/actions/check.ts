@@ -1,12 +1,13 @@
 import { readFile } from 'fs/promises';
 import path from 'path';
+import type BestPractice from '../BestPractice';
 import { getBestPracticesDigest } from '../utils/digest';
 import { pathExists } from '../utils/fs';
 import { getAllBestPractices } from '../utils/parse';
 import { DIGEST_FILENAME } from './consts';
 
 type CheckArgs = {
-  srcPath: string;
+  srcPath: string[];
   generatedPath: string;
 };
 
@@ -14,10 +15,15 @@ type CheckArgs = {
  * Compare the digest of the best practices against the stored digest to
  * see if the docs need to be updated.
  */
-const checkAction = async ({ srcPath, generatedPath }: CheckArgs) => {
-  const bestPractices = await getAllBestPractices(srcPath);
+const checkAction = async ({ srcPath: srcPaths, generatedPath }: CheckArgs) => {
+  const allBestPractices: BestPractice[] = [];
 
-  const currentDigest = getBestPracticesDigest(bestPractices);
+  for (const srcPath of srcPaths) {
+    const bestPractices = await getAllBestPractices(srcPath);
+    allBestPractices.push(...bestPractices);
+  }
+
+  const currentDigest = getBestPracticesDigest(allBestPractices);
   const previousDigest = await getPreviousBestPracticesDigest(generatedPath);
 
   if (currentDigest === previousDigest) {
