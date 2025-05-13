@@ -4,7 +4,7 @@ type WriteOptions = {
     writeExtraMeta?: boolean;
 };
 type WriteArgs = {
-    srcPath: string;
+    srcPath: string[];
     docsPath?: string;
     generatedPath: string;
     codeUrl: string;
@@ -14,7 +14,7 @@ type WriteArgs = {
 /**
  * Generate best practices from source and write them out.
  */
-export default function writeAction({ srcPath, docsPath, generatedPath, codeUrl, extensionMappings, options, }: WriteArgs): Promise<BestPractice[]>;
+export default function writeAction({ srcPath: srcPaths, docsPath, generatedPath, codeUrl, extensionMappings, options, }: WriteArgs): Promise<BestPractice[]>;
 /**
  * Writes best practices out to Markdown doc files.
  */
