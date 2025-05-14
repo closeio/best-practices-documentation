@@ -6,7 +6,7 @@ import writeAction from './actions/write';
 const main = () => {
   program
     .command('check')
-    .requiredOption('-s, --src-path <srcPath>')
+    .requiredOption('-s, --src-path <srcPath...>')
     .requiredOption('-g, --generated-path <generatedPath>')
     .action((args) => {
       checkAction(args);
@@ -14,7 +14,7 @@ const main = () => {
 
   program
     .command('write')
-    .requiredOption('-s, --src-path <srcPath>')
+    .requiredOption('-s, --src-path <srcPath...>')
     .option('-d, --docs-path <docsPath>')
     .requiredOption('-g, --generated-path <generatedPath>')
     .requiredOption('-u, --code-url <codeUrl>')

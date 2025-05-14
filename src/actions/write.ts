@@ -14,7 +14,7 @@ type WriteOptions = {
 };
 
 type WriteArgs = {
-  srcPath: string;
+  srcPath: string[];
   docsPath?: string;
   generatedPath: string;
   codeUrl: string;
@@ -26,7 +26,7 @@ type WriteArgs = {
  * Generate best practices from source and write them out.
  */
 export default async function writeAction({
-  srcPath,
+  srcPath: srcPaths,
   docsPath,
   generatedPath,
   codeUrl,
@@ -35,7 +35,13 @@ export default async function writeAction({
 }: WriteArgs) {
   const codeTypeMap = buildCodeTypeMap(extensionMappings ?? []);
 
-  const allBestPractices = await getAllBestPractices(srcPath);
+  const allBestPractices: BestPractice[] = [];
+
+  for (const srcPath of srcPaths) {
+    const bestPractices = await getAllBestPractices(srcPath);
+    allBestPractices.push(...bestPractices);
+  }
+
   let filteredBestPractices: BestPractice[];
 
   if (docsPath) {
